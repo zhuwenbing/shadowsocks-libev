@@ -40,7 +40,7 @@ ENV TZ=UTC
 ENV ARGS=
 
 COPY --from=builder \
-    /usr/local/bin/ss-* \
+    /usr/local/bin/ss-server \
     /usr/local/bin/
 
 RUN set -x \
