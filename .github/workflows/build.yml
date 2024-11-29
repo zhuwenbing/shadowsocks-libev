@@ -5,6 +5,11 @@ on:
   schedule:
     - cron: "30 5 * * *"
 
+env:
+  BASE_IMAGE: alpine
+  DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}
+  IMAGE_NAME: ss-server
+
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -15,8 +20,8 @@ jobs:
         id: run
         uses: lucacome/docker-image-update-checker@v2.0.0
         with:
-          base-image: library/alpine:latest
-          image: ${{ secrets.DOCKER_USERNAME }}/shadowsocks-libev:alpine
+          base-image: library/${{ env.BASE_IMAGE }}:latest
+          image: ${{ env.DOCKER_REPOSITORY }}/${{ env.IMAGE_NAME }}:${{ env.BASE_IMAGE }}
         continue-on-error: true
         if: github.event_name == 'schedule'
       - name: Check on result
@@ -50,9 +55,7 @@ jobs:
       - name: check and set image version
         id: prepare
         run: |
-          REPOSITORY=${{ secrets.DOCKER_USERNAME }}
-          IMAGE_NAME=shadowsocks-libev
-          TAGS="${REPOSITORY}/${IMAGE_NAME}:alpine,${REPOSITORY}/${IMAGE_NAME}:latest"
+          TAGS="${{ env.DOCKER_REPOSITORY }}/${{ env.IMAGE_NAME }}:${{ env.BASE_IMAGE }},${{ env.DOCKER_REPOSITORY }}/${{ env.IMAGE_NAME }}:latest"
           echo "tags=${TAGS}" >> $GITHUB_OUTPUT
 
       - name: build & push image
