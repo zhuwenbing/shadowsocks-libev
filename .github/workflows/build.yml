@@ -66,12 +66,3 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.prepare.outputs.tags }}
-
-  keepalive:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'schedule'
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Keepalive Workflow
-        uses: gautamkrishnar/keepalive-workflow@v2
