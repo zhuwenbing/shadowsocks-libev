@@ -41,7 +41,7 @@ jobs:
       github.event_name != 'schedule' ||
       needs.check.outputs.needs-updating == 'true'
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           submodules: true
 
