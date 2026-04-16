@@ -22,7 +22,11 @@ RUN set -x \
  && make install \
  && cd /usr/local/bin \
  && ls /usr/local/bin/ss-* | xargs -n1 setcap cap_net_bind_service+ep \
- && strip $(ls /usr/local/bin | grep -Ev 'ss-nat') \
+ && for f in ss-local ss-manager ss-redir ss-server ss-tunnel; do \
+      if file "/usr/local/bin/$f" | grep -q 'ELF'; then \
+        strip "/usr/local/bin/$f"; \
+      fi \
+    done \
  && apk del .build-deps \
  # Runtime dependencies setup
  && apk add --no-cache \
